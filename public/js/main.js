@@ -18,7 +18,7 @@ $(document).ready(function () {
   $("#addNewTask").click(function (e) {
     e.preventDefault()
 
-    let title = $('[name="title"]').val()
+    let title = $(".create-task").val()
 
     $.ajax({
       url: "/tasks",
@@ -46,7 +46,8 @@ $(document).ready(function () {
   })
 })
 
-$(document).on("change", ".toogleBtn", function () {
+//Upadte status - is_complete
+$(document).on("change", ".toogle-task", function () {
   let checkbox = $(this)
   let taskId = checkbox.data("id")
   let isCompleted = checkbox.is(":checked") ? 1 : 0
@@ -75,7 +76,7 @@ $(document).on("change", ".toogleBtn", function () {
   })
 })
 
-$(document).on("click", ".deleteTask", function () {
+$(document).on("click", ".delete-task", function () {
   let button = $(this)
   let taskId = button.data("id")
   let tableRow = button.closest("tr")
@@ -100,24 +101,90 @@ $(document).on("click", ".deleteTask", function () {
   })
 })
 
+$(document).on("click", ".edit-task", function () {
+  let button = $(this)
+  let tableRow = button.closest("tr")
+  let titleInput = tableRow.find(".editable-title")
+  let titleSpan = tableRow.find(".task-title")
+
+  if (!button.hasClass("cancel-edit")) {
+    titleInput.show()
+    titleSpan.hide()
+    button.html('<img src="/images/xmark.svg" width="20">')
+    button.addClass("cancel-edit")
+  } else {
+    titleInput.hide()
+    titleSpan.show()
+    button.html('<img src="/images/pen.svg" width="20">')
+    button.removeClass("cancel-edit")
+  }
+})
+
+//Upate task title
+$(document).on("click", ".update-task-title", function () {
+  let button = $(this)
+  let taskId = button.data("id")
+  let tableRow = button.closest("tr")
+  let titleInput = tableRow.find(".editable-title")
+  let titleSpan = tableRow.find(".task-title")
+  let titleNewVal = tableRow.find('[name="title"]').val()
+  let editButton = tableRow.find(".edit-task")
+
+  if (titleNewVal === titleSpan) return
+
+  $.ajax({
+    url: `tasks/${taskId}`,
+    method: "PUT",
+    data: {
+      title: titleNewVal
+    },
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      Accept: "application/json"
+    },
+    success: function (response) {
+      titleSpan.html(titleNewVal)
+      titleInput.hide()
+      titleSpan.show()
+      editButton.html('<img src="/images/pen.svg" width="20">')
+      editButton.removeClass("cancel-edit")
+    },
+    error: function (xhr) {
+      if (xhr.status === 422) {
+        let errors = xhr.responseJSON.errors
+        console.log(errors)
+      } else {
+        alert("Server error: " + xhr.responseJSON.message)
+      }
+    }
+  })
+})
+
 function createTableRow(task) {
   let html = `<tr>
                   <td>${task.id}</td>
-                  <td>${task.title}</td>
+                  <td>
+                    <span class="task-title">${task.title}</span>
+                    <div class="input-group editable-title" style="display: none">
+                        <input type="text" name="title" class="form-control" placeholder="${task.title}" value="${task.title}">
+                        <button class="btn btn-outline-secondary update-task-title" type="button" data-id="${task.id}">update</button>
+                    </div>
+                  </td>
                     <td>
                       <div class="form-check form-switch">
-                        <input class="form-check-input toogleBtn"
+                        <input class="form-check-input toogle-task"
                               type="checkbox"
                               role="switch"
                               data-id="${task.id}"
                               ${task.is_completed == 1 ? "checked" : ""}
-                              id="status_${task.id}">
-                        <label class="form-check-label" for="status_${task.id}">status</label>
                       </div>
                     </td>
                   <td>
-                    <button class="btn deleteTask" data-id="${task.id}">
+                    <button class="btn delete-task" data-id="${task.id}">
                       <img src="/images/trash.svg" width="20">
+                    </button>
+                    <button class="btn edit-task" data-id="${task.id}">
+                      <img src="/images/pen.svg" width="20">
                     </button>
                   </td>
               </div>`

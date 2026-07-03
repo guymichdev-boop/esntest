@@ -68,5 +68,26 @@ class TaskController extends Controller
                 'status'  => 'error',
                 'message' => 'Failed to delete task',
             ], 500);
+    }
+
+    public function update(Request $request, Task $task): JsonResponse
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $updated = $task->update($validated);
+
+        if ($updated) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Task updated successfully',
+            ], 200);
         }
+
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Failed to update task',
+        ], 500);
+    }
 }

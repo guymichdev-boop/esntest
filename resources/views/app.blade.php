@@ -21,32 +21,36 @@
         </div>
     </header>
 
-    <main class="container">
+    <main class="container" style="min-height: calc(100vh - 152px - 40px)">
         <div>
             <div class="input-group mb-3">
-                <input type="text" name="title" class="form-control" placeholder="{{__('Add new task')}}">
+                <input type="text" name="title" class="form-control create-task" placeholder="{{__('Add new task')}}">
                 <button class="btn btn-outline-secondary" type="button"  id="addNewTask">New Task</button>
             </div>
         </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                <th scope="col">#</th>
-                <th scope="col">title</th>
-                <th scope="col">is completed</th>
-                <th scope="col">actions</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                
-            </tbody>
-            </table>
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-secondary text-uppercase fs-7 fw-semibold">
+                        <tr>
+                    <th scope="col" class="ps-4" style="width: 80px;">#</th>
+                    <th scope="col">title</th>
+                    <th scope="col" style="width: 150px;">is completed</th>
+                    <th scope="col" class="text-end pe-4" style="width: 120px;">actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
     </main>
 
-    <footer>
-        <p>&copy; 2026 My Laravel App</p>
+    <footer class="d-flex justify-content-center">
+        <p>&copy; Guy Michelevitz </p>
     </footer>
 </body>
 </html>
