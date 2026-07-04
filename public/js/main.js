@@ -1,8 +1,7 @@
 $(document).ready(function () {
-  let pageNumber = 1
   //GET all tasks
   $.ajax({
-    url: "/tasks?page=" + pageNumber,
+    url: "/tasks",
     type: "GET",
     success: function (response) {
       $("#tableBody").empty()
@@ -18,13 +17,13 @@ $(document).ready(function () {
   $("#addNewTask").click(function (e) {
     e.preventDefault()
 
-    let title = $(".create-task").val()
+    let title = $(".create-task")
 
     $.ajax({
       url: "/tasks",
       type: "POST",
       data: {
-        title: title
+        title: title.val()
       },
       headers: {
         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -33,6 +32,7 @@ $(document).ready(function () {
       success: function (response) {
         let tableRow = createTableRow(response.data)
         $("#tableBody").append(tableRow)
+        title.val("")
       },
       error: function (xhr) {
         if (xhr.status === 422) {
@@ -76,10 +76,16 @@ $(document).on("change", ".toogle-task", function () {
   })
 })
 
+//Click on delete task
 $(document).on("click", ".delete-task", function () {
+  if (!confirm("Are you sure you want to delete this task?")) {
+    return
+  }
+
   let button = $(this)
   let taskId = button.data("id")
   let tableRow = button.closest("tr")
+
   $.ajax({
     url: `tasks/${taskId}`,
     method: "DELETE",
@@ -101,6 +107,7 @@ $(document).on("click", ".delete-task", function () {
   })
 })
 
+//OPEN title edit text input
 $(document).on("click", ".edit-task", function () {
   let button = $(this)
   let tableRow = button.closest("tr")
@@ -160,9 +167,34 @@ $(document).on("click", ".update-task-title", function () {
   })
 })
 
+// FIlter tasks
+$(document).on("change", 'input[name="filter"]', function () {
+  let activeFilter = $(this).val()
+  let url = new URL(window.location.href)
+
+  $.ajax({
+    url: `tasks/?filter=${activeFilter}`,
+    type: "GET",
+    success: function (response) {
+      $("#tableBody").empty()
+      if (activeFilter !== "all") {
+        url.searchParams.set("filter", activeFilter)
+      } else {
+        url.searchParams.delete("filter")
+      }
+      window.history.pushState({}, "", url.href)
+
+      $.each(response.data, function (index, task) {
+        let tableRow = createTableRow(task)
+        $("#tableBody").append(tableRow)
+      })
+    }
+  })
+})
+
 function createTableRow(task) {
   let html = `<tr>
-                  <td>${task.id}</td>
+                  <td class="text-center">${task.id}</td>
                   <td>
                     <span class="task-title">${task.title}</span>
                     <div class="input-group editable-title" style="display: none">

@@ -8,11 +8,15 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function getTasks(): JsonResponse
+    public function getTasks(Request $request): JsonResponse
     {
-        $tasks = Task::oldest()->paginate(10);
+        if($request->has('filter') && $request->query('filter') != 'all'){
+            $tasks = Task::oldest()->where('is_completed', '=', $request->query('filter'))->get();
+        }else{
+            $tasks = Task::oldest()->get();
+        }
 
-        return response()->json($tasks);
+        return response()->json(['data' => $tasks]);
     }
 
     public function store(Request $request): JsonResponse

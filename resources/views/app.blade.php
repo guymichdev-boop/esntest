@@ -14,18 +14,39 @@
     {{-- styles --}}
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
-<body>
-    <header>
-        <div class="d-grid gap-2 d-md-flex justify-content-center p-5 bg-gray">
-            <h1>Task Managment</h1>
+<body style="background-color: #f8f8f6;">
+    <header class="container my-4">
+        <div class="d-flex justify-content-center p-5 rounded-4 border" style=" border-color: #eaeaea !important;">
+            <h1 class="display-6 fw-bold mb-0 text-dark" style="letter-spacing: -0.5px;">Task Management</h1>
         </div>
     </header>
 
-    <main class="container" style="min-height: calc(100vh - 152px - 40px)">
+    <main class="container" style="min-height: calc(100vh - 194px - 40px)">
         <div>
-            <div class="input-group mb-3">
+            <div class="input-group mb-4">
                 <input type="text" name="title" class="form-control create-task" placeholder="{{__('Add new task')}}">
-                <button class="btn btn-outline-secondary" type="button"  id="addNewTask">New Task</button>
+                <button class="btn btn-outline-secondary" type="button"  id="addNewTask">Add Task</button>
+            </div>
+        </div>
+
+        <div class="my-4">
+            <div class="btn-group border rounded-pill p-1 bg-white shadow-sm" role="group">
+                
+                <input type="radio" class="btn-check" name="filter" id="filterAll" value="all" autocomplete="off" checked>
+                <label class="btn btn-sm btn-light border-0 rounded-pill px-3 py-1.5" for="filterAll">
+                    All
+                </label>
+
+                <input type="radio" class="btn-check" name="filter" id="filterNotComplete" value="0" autocomplete="off">
+                <label class="btn btn-sm btn-light text-secondary border-0 rounded-pill px-3 py-1.5" for="filterNotComplete">
+                    Completed
+                </label>
+
+                <input type="radio" class="btn-check" name="filter" id="filterCompleted" value="1" autocomplete="off">
+                <label class="btn btn-sm btn-light text-secondary border-0 rounded-pill px-3 py-1.5" for="filterCompleted">
+                    Not completed
+                </label>
+                
             </div>
         </div>
 
@@ -34,7 +55,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-secondary text-uppercase fs-7 fw-semibold">
                         <tr>
-                    <th scope="col" class="ps-4" style="width: 80px;">#</th>
+                    <th scope="col" class="text-center" style="width: 80px;">#</th>
                     <th scope="col">title</th>
                     <th scope="col" style="width: 150px;">is completed</th>
                     <th scope="col" class="text-end pe-4" style="width: 120px;">actions</th>
