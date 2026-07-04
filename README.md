@@ -1,3 +1,70 @@
+## Getting Started
+
+Follow these steps to set up and run the application locally.
+
+### 1. Clone the Repository
+
+Clone the project to your local machine using Git:
+
+```bash
+git clone <YOUR_REPOSITORY_URL>
+cd <YOUR_PROJECT_DIRECTORY_NAME>
+```
+
+### 2. Open in Your Code Editor
+
+Open the project folder in your preferred text editor (e.g., VS Code).
+
+```bash
+code .
+```
+
+### 3. Install Dependencies
+
+Run Composer to install all the required PHP packages:
+
+```bash
+composer install
+```
+
+### 4. Configure Environment Variables (.env)
+
+1. Copy the example environment file to create your `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+2. Open the `.env` file in your editor and update the database configuration with your local database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database_name
+   DB_USERNAME=your_database_username
+   DB_PASSWORD=your_database_password
+   ```
+3. Generate the application key:
+   ```bash
+   php artisan key:generate
+   ```
+
+### 5. Run Database Migrations
+
+Create the database tables and structures inside your connected database:
+
+```bash
+php artisan migrate
+```
+
+### 6. Start the Local Server
+
+Run the local development server to test the application:
+
+```bash
+php artisan serve
+```
+
+Once started, open your browser and navigate to: `http://127.0.0.1:8000`
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
