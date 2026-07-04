@@ -27,6 +27,7 @@
                 <input type="text" name="title" class="form-control create-task" placeholder="{{__('Add new task')}}">
                 <button class="btn btn-outline-secondary" type="button"  id="addNewTask">Add Task</button>
             </div>
+            <span class="title-error text-danger" style="display: none"></span>
         </div>
 
         <div class="my-4">
@@ -39,12 +40,12 @@
 
                 <input type="radio" class="btn-check" name="filter" id="filterNotComplete" value="0" autocomplete="off">
                 <label class="btn btn-sm btn-light text-secondary border-0 rounded-pill px-3 py-1.5" for="filterNotComplete">
-                    Completed
+                    Not completed
                 </label>
 
                 <input type="radio" class="btn-check" name="filter" id="filterCompleted" value="1" autocomplete="off">
                 <label class="btn btn-sm btn-light text-secondary border-0 rounded-pill px-3 py-1.5" for="filterCompleted">
-                    Not completed
+                    completed
                 </label>
                 
             </div>

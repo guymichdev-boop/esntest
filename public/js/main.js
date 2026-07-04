@@ -18,6 +18,7 @@ $(document).ready(function () {
     e.preventDefault()
 
     let title = $(".create-task")
+    let urlParams = new URLSearchParams(window.location.search)
 
     $.ajax({
       url: "/tasks",
@@ -31,13 +32,25 @@ $(document).ready(function () {
       },
       success: function (response) {
         let tableRow = createTableRow(response.data)
+
+        //hide if filter show only si_completed is active
+        if (urlParams.get("filter") === "1") {
+          tableRow.hide()
+        }
+
         $("#tableBody").append(tableRow)
         title.val("")
       },
       error: function (xhr) {
         if (xhr.status === 422) {
           let errors = xhr.responseJSON.errors
-          console.log(errors)
+          title.addClass("border border-danger")
+          $(".title-error").html(errors.title)
+          $(".title-error").show()
+          setTimeout(() => {
+            $(".title-error").hide()
+            title.removeClass("border border-danger")
+          }, 3000)
         } else {
           alert("Server error: " + xhr.responseJSON.message)
         }

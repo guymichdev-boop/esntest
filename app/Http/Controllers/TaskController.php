@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
 {
     public function getTasks(Request $request): JsonResponse
     {
         if($request->has('filter') && $request->query('filter') != 'all'){
-            $tasks = Task::oldest()->where('is_completed', '=', $request->query('filter'))->get();
+            $tasks = Task::oldest()
+            ->where('is_completed', '=', $request->query('filter'))
+            ->get();
         }else{
             $tasks = Task::oldest()->get();
         }
@@ -21,23 +24,20 @@ class TaskController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title'  => 'required|string|max:255',
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|unique:tasks,title',
         ]);
-        $task = Task::create($validated);
-        
-        if(!$task->id){
+
+        if ($validator->fails()) {
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Problem creating task',
-                'data'    => $validated 
-            ], 500);
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-       return response()->json([
-            'status'  => 'success',
-            'message' => 'Created successfully!',
-            'data'    => $task 
+        $task = Task::create($validator->validated());
+
+        return response()->json([
+            'data' => $task
         ], 201);
     }
 
